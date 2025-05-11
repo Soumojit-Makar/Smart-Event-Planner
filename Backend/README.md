@@ -1,143 +1,120 @@
-# 📅 Smart Event Planner API
 
-**Version:** 1.0.0  
-**Description:**  
-Smart Event Planner is an application designed to help users plan events efficiently. It allows users to organize guest lists, send invitations, get personalized guest recommendations based on AI, and manage event schedules seamlessly. The app also includes features such as automated reminders, task management, and real-time updates for a smoother event planning experience.
+# 💸 User Expense Tracker API (FastAPI + PostgreSQL + Gemini AI)
+
+> A secure, AI-integrated personal expense tracker API using FastAPI, PostgreSQL, and Gemini AI. Supports user registration, login, expense management, and smart recommendations.
+
+---
+## 🚀 Features
+
+> - 🔐 JWT-based Authentication
+> - ➕ Add, View, Analyze Expenses
+> - 📊 Category-wise Spending Insights
+> - 🤖 Gemini AI Financial Guidance
 
 ---
 
-## 🛠️ Authentication Endpoints
+## 🛠️ Tech Stack
 
-### 🔐 `POST /auth/register`
-**Registers a new user**
-
-- **Tags:** Authentication  
-- **Summary:** Register a new user  
-- **Request Body (application/json):**
-```json
-{
-  "fullname": "Soumojit Makar",
-  "email": "soumojitmakar123@gmail.com",
-  "password": "644946461646aaafsasas"
-}
-```
-
-- **Response (200 OK):**
-```json
-{
-  "id": 1,
-  "email": "soumojitmakar123@gmail.com",
-  "full_name": "Soumojit Makar"
-}
-```
-
-- **Response (422 Validation Error):**
-```json
-{
-  "detail": [
-    {
-      "loc": ["body", "email"],
-      "msg": "value is not a valid email address",
-      "type": "value_error.email"
-    }
-  ]
-}
-```
+> - **FastAPI** (Backend Framework)
+> - **PostgreSQL** (Database)
+> - **SQLModel** (ORM)
+> - **JWT** (`fastapi-jwt-auth`)
+> - **Gemini AI** (`google-generativeai`)
+> - **bcrypt / passlib** (Password Hashing)
+> - **python-dotenv** (Environment Variables)
 
 ---
 
-### 🔑 `POST /auth/login`
-**Authenticates an existing user**
+## 📁 Project Structure
 
-- **Tags:** Authentication  
-- **Summary:** Authorize existing user  
-- **Request Body (application/json):**
-```json
-{
-  "username": "soumojitmakar123@gmail.com",
-  "password": "644946461646aaafsasas"
-}
 ```
-
-- **Response (200 OK):**
-```json
-{
-  "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
-  "token_type": "bearer"
-}
-```
-
-- **Response (422 Validation Error):**
-```json
-{
-  "detail": [
-    {
-      "loc": ["body", "username"],
-      "msg": "field required",
-      "type": "value_error.missing"
-    }
-  ]
-}
+src/
+├── config.py
+├── db.py
+├── models/
+│   └── models.py
+├── routes/
+│   ├── auth.py
+│   └── expense.py
+├── schemas/
+│   └── schemas.py
+├── services/
+│   ├── auth_service.py
+│   ├── expense_service.py
+│   └── ai_service.py
+├──utils/
+│   └── hash.py
+main.py
 ```
 
 ---
 
-## 📦 Components - Schemas
+## 🔐 .env Format
 
-### 🔸 UserCreate
-```json
-{
-  "fullname": "Soumojit Makar",
-  "email": "soumojitmakar123@gmail.com",
-  "password": "644946461646aaafsasas"
-}
 ```
-
-### 🔸 UserLogin
-```json
-{
-  "username": "soumojitmakar123@gmail.com",
-  "password": "644946461646aaafsasas"
-}
-```
-
-### 🔸 UserOut
-```json
-{
-  "id": 1,
-  "email": "soumojitmakar123@gmail.com",
-  "full_name": "Soumojit Makar"
-}
-```
-
-### 🔸 Token
-```json
-{
-  "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
-  "token_type": "bearer"
-}
-```
-
-### 🔸 HTTPValidationError
-```json
-{
-  "detail": [
-    {
-      "loc": ["body", "email"],
-      "msg": "value is not a valid email address",
-      "type": "value_error.email"
-    }
-  ]
-}
+DATABASE_URL=postgresql://root:root@localhost:5432/smart-expense-tracker
+SECRET_KEY=your_secret_key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=3600
+AI_API_KEY=your_gemini_api_key
 ```
 
 ---
 
-## ✅ ValidationError (Sub-schema)
-```json
-{
-  "loc": ["body", "email"],
-  "msg": "value is not a valid email address",
-  "type": "value_error.email"
-}
+## 📦 Installation
+
+```bash
+git clone https://github.com/your-username/expense-tracker.git
+cd expense-tracker
+pip install -r requirements.txt
+uvicorn main:app --reload
 ```
+
+
+---
+
+## 🛠️ Useful Commands
+
+- Run Dev Server: `uvicorn main:app --reload`
+- Install Package: `pip install <package>`
+- Create Tables: Called automatically on startup via `db.py`
+
+---
+
+## 📌 Testing with Postman
+
+1. **Register** via `/auth/register`
+2. **Login** via `/auth/login` → Copy `access_token`
+3. **Set Auth Header**:
+   ```
+   Authorization: Bearer <access_token>
+   ```
+4. **Add Expense** via `/expenses/`
+5. **Get All** via `/expenses/`
+6. **AI Analysis** via `/expenses/analysis`
+
+---
+
+## 🧠 Gemini AI Prompt Template
+
+```text
+Analyze this JSON of user expenses:
+{JSON_DATA}
+
+Give back:
+- Total Spent
+- Category-wise breakdown
+- Good Habits
+- Areas for Improvement
+- Financial Tips
+```
+
+
+---
+
+## 👨‍💻 Author
+
+**Soumojit Makar**  
+📧 [soumojitmakar1234@gmail.com](mailto:soumojitmakar1234@gmail.com)  
+🔗 [LinkedIn](https://www.linkedin.com/in/soumojit-makar-a9a119304)  
+🐙 [GitHub](https://github.com/Soumojit-Makar)

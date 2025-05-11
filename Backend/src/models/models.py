@@ -1,30 +1,20 @@
-# src/models.py (or wherever your models are)
-
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
-from src.db import Base
+from sqlmodel import SQLModel, Field, Relationship
+from typing import Optional, List
 from datetime import datetime
-from sqlalchemy.orm import relationship
 
-class User(Base):
-    __tablename__ = "users"
+class Expense(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    title: str
+    amount: float
+    category: str
+    user_id: int = Field(foreign_key="user.id")
+    user: Optional["User"] = Relationship(back_populates="expenses")
 
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    email = Column(String, unique=True, index=True)
-    full_name = Column(String)
-    password = Column(String)
-
-    events = relationship("Event", back_populates="creator", cascade="all, delete-orphan")
-
-
-class Event(Base):
-    __tablename__ = "events"
-
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, nullable=False)
-    description = Column(String)
-    date = Column(DateTime, default=datetime.utcnow)
-
-    created_by = Column(Integer, ForeignKey("users.id"))
-
-    creator = relationship("User", back_populates="events")
+class User(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    username: str = Field(index=True, unique=True)
+    email: str = Field(index=True, unique=True)
+    full_name: Optional[str]
+    salary:int
+    password: str
+    expenses: List[Expense] = Relationship(back_populates="user")

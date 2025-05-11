@@ -1,23 +1,21 @@
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from src.routes.auth import router as AuthRouter
-from src.db import Base, engine
-from src.models.models import User 
+from src.routes.expense import router as ExpenseRouter
+from src.db import create_table
 
-print("Creating tables...")
-Base.metadata.create_all(bind=engine)
-print("Done.")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_table()
+    yield
 
+# FastAPI app instance
 app = FastAPI(
-    title="Smart Event Planner",
+    title="User Expense Tracker",
     version="1.0.0",
-    description=(
-        "Smart Event Planner is an application designed to help users plan events efficiently. "
-        "It allows users to organize guest lists, send invitations, get personalized guest recommendations "
-        "based on AI, and manage event schedules seamlessly. The app also includes features such as "
-        "automated reminders, task management, and real-time updates for a smoother event planning experience."
-    )
-
+    description="A secure platform to track and manage personal expenses.",
+    lifespan=lifespan
 )
 
 origins = ["*"]
@@ -29,5 +27,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 app.include_router(AuthRouter)
+app.include_router(ExpenseRouter)
