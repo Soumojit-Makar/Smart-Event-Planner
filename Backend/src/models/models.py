@@ -15,6 +15,6 @@ class User(SQLModel, table=True):
     username: str = Field(index=True, unique=True)
     email: str = Field(index=True, unique=True)
     full_name: Optional[str]
-    salary:int
+    salary:int=Field(index=True,default=0)
     password: str
     expenses: List[Expense] = Relationship(back_populates="user")

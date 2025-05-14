@@ -17,4 +17,25 @@ def login(user: UserLogin, db: SessionDep, Authorize: AuthJWT = Depends()):
     if not db_user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
     access_token = Authorize.create_access_token(subject=db_user.username)
-    return Token(access_token=access_token, token_type="bearer")
+    refresh_token = Authorize.create_refresh_token(subject=db_user.username)
+    return Token(
+        access_token=access_token,
+        refresh_token=refresh_token,
+        token_type="bearer"
+        )
+@router.post("/refresh", response_model=Token, summary="Refresh access token")
+def refresh_token(Authorize: AuthJWT = Depends()):
+    try:
+        Authorize.jwt_refresh_token_required()
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Refresh token invalid")
+
+    current_user = Authorize.get_jwt_subject()
+    new_access_token = Authorize.create_access_token(subject=current_user)
+    new_refresh_token=Authorize.create_refresh_token(subject=current_user)
+
+    return Token(
+        access_token=new_access_token,
+        refresh_token=new_refresh_token, 
+        token_type="bearer"
+    )

@@ -1,5 +1,5 @@
 
-from sqlalchemy.orm import Session
+from sqlmodel import Session
 from src.schemas.schemas import ExpenseCreate, ExpenseOut
 from src.models.models import Expense, User
 

@@ -50,12 +50,13 @@ class UserOut(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
-
+    refresh_token: Optional[str] = None
     class Config:
         schema_extra = {
             "example": {
                 "access_token": "some_jwt_token_value",
-                "token_type": "bearer"
+                "token_type": "bearer",
+                "refresh_token":"some_jwt_refresh_token_value"
             }
         }
 

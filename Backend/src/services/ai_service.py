@@ -1,7 +1,7 @@
 import json
 import logging
 import google.generativeai as genai
-from sqlalchemy.orm import Session
+from sqlmodel import Session
 from src.config import AI_API_KEY
 from src.schemas.schemas import AIResponse
 from src.models.models import User, Expense
